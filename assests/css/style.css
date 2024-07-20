@@ -265,7 +265,7 @@ section .title::after {
 .about .title::after {
     content: "who I am";
     color: #000;
-    background-color: #FFF;
+    background-color: rgb(229, 241, 252);
 }
 
 .about .about-content .left {
@@ -276,7 +276,7 @@ section .title::after {
     height: 400px;
     width: 400px;
     object-fit: cover;
-    border-radius: 18px;
+    border-radius: 28px;
     box-shadow: 10px 10px 140px 10px rgb(162, 202, 238);
 }
 
@@ -300,12 +300,10 @@ section .title::after {
 
 .about .about-content .right a {
     display: inline-block;
-    background: #fff;
     color: rgb(18, 6, 244);
-    font-size: 20px;
-    font-weight: 500;
-    padding: 10px 20px;
-    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 360;
+    border-radius: 3px;
     transition: all 0.3s ease;
 }
 
