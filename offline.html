@@ -97,10 +97,11 @@
     <div class="offline-container">
         <h1>Oops! You're Offline</h1>
         <p>It seems like you're not connected to the internet. Please check your connection and try again.</p>
+        <button onclick="location.reload()">Retry</button>
         <button id="retryButton">Retry</button>
     </div>
 
-    <script>
+    <!-- <script>
         const retryButton = document.getElementById('retryButton');
 
         retryButton.addEventListener('click', () => {
@@ -131,7 +132,7 @@
         window.addEventListener('online', () => {
             window.location.href = 'index.html'; // Redirect to index.html automatically
         });
-    </script>
+    </script> -->
 </body>
 
 </html>

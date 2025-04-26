@@ -74,3 +74,5 @@ $(document).ready(function () {
         }
     });
 });
+
+console.log('Scripts Loaded Successfully!');

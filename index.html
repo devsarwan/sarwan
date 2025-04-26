@@ -6,7 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=yes" />
 
-    <title>Sarwan Yadav | Full Stack Developer & UI/UX Designer Portfolio</title>
+    <title>
+        Sarwan Yadav | Full Stack Developer & UI/UX Designer Portfolio
+    </title>
 
     <!-- Primary Meta Tags -->
     <meta name="title" content="Sarwan Yadav | Full Stack Developer & UI/UX Designer Portfolio" />
@@ -64,7 +66,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
         integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 </head>
 
 <body>
@@ -114,11 +115,16 @@
                         loading="lazy" />
                 </div>
                 <div class="column right">
-                    <div class="text">I'm Sarwan and I'm a <span class="typing-2"></span></div>
-                    <p>I am a 12th-grade student from India passionate about web development, software engineering, and
-                        creative design. Founder of <a href="https://ellowdigitals.me/" target="_blank"
-                            rel="noopener noreferrer">EllowDigitals</a>, I focus on building modern, user-friendly
-                        digital solutions for businesses and individuals worldwide.</p>
+                    <div class="text">
+                        I'm Sarwan and I'm a <span class="typing-2"></span>
+                    </div>
+                    <p>
+                        I am a 12th-grade student from India passionate about web
+                        development, software engineering, and creative design. Founder of
+                        <a href="https://ellowdigitals.me/" target="_blank" rel="noopener noreferrer">EllowDigitals</a>,
+                        I focus on building modern, user-friendly digital solutions for
+                        businesses and individuals worldwide.
+                    </p>
                 </div>
             </div>
         </div>
@@ -133,7 +139,9 @@
                     <div class="box">
                         <i class="fas fa-paint-brush"></i>
                         <div class="text">Web Design</div>
-                        <p>Responsive, attractive, and brand-focused website designs to enhance your online presence.
+                        <p>
+                            Responsive, attractive, and brand-focused website designs to
+                            enhance your online presence.
                         </p>
                     </div>
                 </div>
@@ -141,14 +149,20 @@
                     <div class="box">
                         <i class="fas fa-code"></i>
                         <div class="text">Web Development</div>
-                        <p>Modern and efficient web development services tailored for speed, SEO, and scalability.</p>
+                        <p>
+                            Modern and efficient web development services tailored for
+                            speed, SEO, and scalability.
+                        </p>
                     </div>
                 </div>
                 <div class="card">
                     <div class="box">
                         <i class="fas fa-desktop"></i>
                         <div class="text">App Development</div>
-                        <p>Custom Windows and Android applications designed for performance and usability.</p>
+                        <p>
+                            Custom Windows and Android applications designed for performance
+                            and usability.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -162,8 +176,11 @@
             <div class="skills-content">
                 <div class="column left">
                     <div class="text">Creative Skills & Experience</div>
-                    <p>Proficient in HTML (90%), CSS (60%), JavaScript (40%), PHP (25%), Python (75%), and MySQL (70%).
-                        I craft interactive, secure, and high-performing projects that solve real-world problems.</p>
+                    <p>
+                        Proficient in HTML (90%), CSS (60%), JavaScript (40%), PHP (25%),
+                        Python (75%), and MySQL (70%). I craft interactive, secure, and
+                        high-performing projects that solve real-world problems.
+                    </p>
                 </div>
                 <div class="column right">
                     <div class="bars">
@@ -226,7 +243,9 @@
             <div class="contact-content">
                 <div class="column left">
                     <div class="text">Get in Touch</div>
-                    <p>Feel free to reach out for collaborations or freelance projects!</p>
+                    <p>
+                        Feel free to reach out for collaborations or freelance projects!
+                    </p>
                     <div class="icons">
                         <div class="row">
                             <i class="fas fa-user"></i>
@@ -268,14 +287,15 @@
                         <div class="field textarea">
                             <textarea name="message" cols="30" rows="10" placeholder="Your Message" required></textarea>
                         </div>
-                        <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_subject" value="New Portfolio Message!">
-                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table" />
+                        <input type="hidden" name="_subject" value="New Portfolio Message!" />
+                        <input type="hidden" name="_captcha" value="false" />
                         <input type="hidden" name="_next"
-                            value="https://sarwan6174.github.io/sarwan6174/redict/thanks.html">
+                            value="https://sarwan6174.github.io/sarwan6174/redict/thanks.html" />
                         <div class="button">
-                            <button type="submit" aria-label="Send Message">Send Message <i
-                                    class="fas fa-paper-plane"></i></button>
+                            <button type="submit" aria-label="Send Message">
+                                Send Message <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -298,6 +318,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
         integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('Service Worker registered:', reg))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+
     <script src="assets/js/script.js"></script>
 </body>
 
