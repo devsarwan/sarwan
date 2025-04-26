@@ -2,18 +2,18 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Offline - Sarwan Portfolio</title>
-    <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
 
-    <!-- Favicons -->
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/android-chrome-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/android-chrome-512x512.png" />
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Sarwan" />
+    <link rel="manifest" href="/assets/favicon/site.webmanifest" />
 
+    <!-- Theme Color -->
     <meta name="theme-color" content="#e67e22" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
@@ -57,13 +57,13 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
+            transition: background-color 0.3s;
         }
 
         .offline-container button:hover {
             background-color: #e67e22;
         }
 
-        /* Reconnect message with spinner */
         .reconnect-message {
             margin-top: 20px;
             font-size: 1rem;
@@ -84,7 +84,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -94,43 +96,38 @@
         <h1>Oops! You're Offline</h1>
         <p>It seems like you're not connected to the internet. Please check your connection and try again.</p>
         <button id="retryButton">Retry</button>
-        <div id="reconnectMessage" class="reconnect-message">
-            <div class="spinner"></div>
-            <span>Connection restored! Reloading...</span>
-        </div>
     </div>
 
     <script>
-        // Handle Retry button
-        document.addEventListener('DOMContentLoaded', () => {
-            const retryButton = document.getElementById('retryButton');
-            const reconnectMessage = document.getElementById('reconnectMessage');
+        const retryButton = document.getElementById('retryButton');
 
-            if (retryButton) {
-                retryButton.addEventListener('click', () => {
-                    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
-                    }
-                    location.reload();
-                });
+        retryButton.addEventListener('click', () => {
+            let reconnectMessage = document.querySelector('.reconnect-message');
+
+            // Create reconnect message if it doesn't exist
+            if (!reconnectMessage) {
+                reconnectMessage = document.createElement('div');
+                reconnectMessage.className = 'reconnect-message';
+                reconnectMessage.innerHTML = `<div class="spinner"></div> Reconnecting...`;
+                document.querySelector('.offline-container').appendChild(reconnectMessage);
             }
 
-            // Auto-detect if the user comes back online
-            window.addEventListener('online', () => {
-                console.log('Connection restored!');
-                if (reconnectMessage) {
-                    reconnectMessage.style.display = 'flex'; // show message + spinner
-                }
-                // Wait 1 second to show the message before reloading
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
-            });
+            reconnectMessage.style.display = 'flex';
 
-            // Optional: detect going offline again
-            window.addEventListener('offline', () => {
-                console.log('You are offline.');
-            });
+            // Simulate reconnect attempt after 2 seconds
+            setTimeout(() => {
+                if (navigator.onLine) {
+                    window.location.href = 'index.html'; // Redirect to index.html
+                } else {
+                    reconnectMessage.innerHTML = 'Still offline. Please try again later.';
+                    reconnectMessage.querySelector('.spinner')?.remove();
+                }
+            }, 2000);
+        });
+
+        // Auto-detect if internet connection is back
+        window.addEventListener('online', () => {
+            window.location.href = 'index.html'; // Redirect to index.html automatically
         });
     </script>
 </body>
