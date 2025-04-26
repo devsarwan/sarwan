@@ -1,5 +1,5 @@
-const CACHE_NAME = 'sarwan-portfolio-v2';
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = "sarwan-app-cache-v1";
+const urlsToCache = [
     '/',
     '/index.html',
     '/offline.html',
@@ -15,78 +15,106 @@ const ASSETS_TO_CACHE = [
     '/assets/favicon/android-chrome-512x512.png',
     '/assets/favicon/apple-touch-icon.png',
     '/assets/css/style.css',
-    '/assets/js/script.js',
+    '/assets/js/script.js'
 ];
 
-// Utility Logger
-const log = (...args) => console.log('[ServiceWorker]', ...args);
+// Install event: Cache essential assets immediately
+self.addEventListener('install', (event) => {
+    console.log('[Service Worker] Installing new service worker...');
 
-// Install Event: Cache static assets
-self.addEventListener('install', event => {
-    log('Installing service worker and caching static assets...');
     event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
-            log('Caching application shell...');
-            return cache.addAll(ASSETS_TO_CACHE);
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(urlsToCache);
+        }).then(() => {
+            return self.skipWaiting(); // Force activate new SW immediately
+        }).catch((error) => {
+            console.error('Cache install failed:', error);
         })
     );
-    self.skipWaiting();
 });
 
-// Activate Event: Clean old caches
-self.addEventListener('activate', event => {
-    log('Activating service worker...');
+// Activate event: Clean up old caches
+self.addEventListener('activate', (event) => {
+    console.log('[Service Worker] Activating service worker...');
+
     event.waitUntil(
-        caches.keys().then(cacheNames =>
-            Promise.all(
-                cacheNames.map(name => {
-                    if (name !== CACHE_NAME) {
-                        log(`Deleting old cache: ${name}`);
-                        return caches.delete(name);
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (cacheName !== CACHE_NAME) {
+                        console.log('[Service Worker] Deleting old cache:', cacheName);
+                        return caches.delete(cacheName);
                     }
                 })
-            )
-        )
+            );
+        }).then(() => {
+            return self.clients.claim(); // Take control immediately
+        }).catch((error) => {
+            console.error('Activation failed:', error);
+        })
     );
-    self.clients.claim();
 });
 
-// Fetch Event: Advanced cache strategy
-self.addEventListener('fetch', event => {
+// Fetch event: Serve from cache first, then network fallback
+self.addEventListener('fetch', (event) => {
     if (event.request.method !== 'GET') return;
 
-    if (event.request.mode === 'navigate') {
-        // Handle navigation requests (page loads)
-        event.respondWith(
-            fetch(event.request).catch(() => caches.match('/offline.html'))
-        );
-    } else {
-        // Handle static assets (CSS, JS, Images etc.)
-        event.respondWith(
-            caches.match(event.request).then(cachedResponse => {
-                const fetchPromise = fetch(event.request)
-                    .then(networkResponse => {
-                        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-                            caches.open(CACHE_NAME).then(cache => {
-                                cache.put(event.request, networkResponse.clone());
-                            });
-                        }
-                        return networkResponse;
-                    }).catch(error => {
-                        log('Fetch failed:', error);
-                        return cachedResponse || caches.match('/offline.html');
+    event.respondWith(
+        caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+            // For dynamic assets, we try to fetch from the network first
+            return fetch(event.request).then((networkResponse) => {
+                // Cache new fetched files if successful
+                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
                     });
-
-                // Serve cached response immediately while updating in background
-                return cachedResponse || fetchPromise;
-            })
-        );
-    }
+                }
+                return networkResponse;
+            });
+        }).catch(() => {
+            // Offline fallback
+            if (event.request.mode === 'navigate') {
+                return caches.match('/offline.html'); // Ensure offline page is served for navigation requests
+            }
+        })
+    );
 });
 
-// Listen for skipWaiting
-self.addEventListener('message', event => {
-    if (event.data && event.data.action === 'skipWaiting') {
+// Listen for skipWaiting trigger from client (e.g., retry button)
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
         self.skipWaiting();
     }
 });
+
+// Cache expiration (Optional): Delete old cache after certain time
+const CACHE_EXPIRATION_TIME = 30 * 24 * 60 * 60 * 1000; // 30 days
+const cacheExpirationHandler = () => {
+    caches.keys().then((cacheNames) => {
+        cacheNames.forEach((cacheName) => {
+            caches.open(cacheName).then((cache) => {
+                cache.keys().then((requests) => {
+                    requests.forEach((request) => {
+                        cache.match(request).then((response) => {
+                            const dateCached = response.headers.get('date');
+                            if (dateCached) {
+                                const age = new Date() - new Date(dateCached);
+                                if (age > CACHE_EXPIRATION_TIME) {
+                                    cache.delete(request); // Delete cached items older than the expiration time
+                                    console.log(`Cache expired: ${request.url}`);
+                                }
+                            }
+                        });
+                    });
+                });
+            });
+        });
+    });
+};
+
+// Run cache expiration periodically (e.g., once a day)
+setInterval(cacheExpirationHandler, 24 * 60 * 60 * 1000); // Every 24 hours

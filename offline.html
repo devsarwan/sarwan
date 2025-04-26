@@ -7,7 +7,7 @@
     <title>Offline - Sarwan Portfolio</title>
     <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
 
-    <!-- Standard Favicons -->
+    <!-- Favicons -->
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png" />
@@ -16,7 +16,6 @@
 
     <meta name="theme-color" content="#e67e22" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
 
     <style>
         body {
@@ -63,6 +62,30 @@
         .offline-container button:hover {
             background-color: #e67e22;
         }
+
+        /* Reconnect message with spinner */
+        .reconnect-message {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #27ae60;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #27ae60;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
@@ -71,17 +94,43 @@
         <h1>Oops! You're Offline</h1>
         <p>It seems like you're not connected to the internet. Please check your connection and try again.</p>
         <button id="retryButton">Retry</button>
+        <div id="reconnectMessage" class="reconnect-message">
+            <div class="spinner"></div>
+            <span>Connection restored! Reloading...</span>
+        </div>
     </div>
 
     <script>
-        // When retry button is clicked, reload the page
-        document.getElementById('retryButton').addEventListener('click', () => {
-            // Check if the service worker is already active and skip waiting (to update the page)
-            if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
+        // Handle Retry button
+        document.addEventListener('DOMContentLoaded', () => {
+            const retryButton = document.getElementById('retryButton');
+            const reconnectMessage = document.getElementById('reconnectMessage');
+
+            if (retryButton) {
+                retryButton.addEventListener('click', () => {
+                    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
+                    }
+                    location.reload();
+                });
             }
-            // Reload the page to check for network availability
-            location.reload();
+
+            // Auto-detect if the user comes back online
+            window.addEventListener('online', () => {
+                console.log('Connection restored!');
+                if (reconnectMessage) {
+                    reconnectMessage.style.display = 'flex'; // show message + spinner
+                }
+                // Wait 1 second to show the message before reloading
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            });
+
+            // Optional: detect going offline again
+            window.addEventListener('offline', () => {
+                console.log('You are offline.');
+            });
         });
     </script>
 </body>
