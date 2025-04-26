@@ -1,9 +1,8 @@
-const CACHE_NAME = 'sarwan-portfolio-v1';
+const CACHE_NAME = 'sarwan-portfolio-v2';
 const ASSETS_TO_CACHE = [
-    '/', // root
+    '/',
     '/index.html',
-    '/LICENSE',
-    '/redict/',
+    '/offline.html',
     '/redict/thanks.html',
     '/assets/images/banner.webp',
     '/assets/images/banner1.webp',
@@ -14,31 +13,27 @@ const ASSETS_TO_CACHE = [
     '/assets/favicon/favicon-32x32.png',
     '/assets/favicon/android-chrome-192x192.png',
     '/assets/favicon/android-chrome-512x512.png',
-    '/assets/favicon/apple-touch-icon.png', // Fallback page for offline access
+    '/assets/favicon/apple-touch-icon.png',
     '/assets/css/style.css',
     '/assets/js/script.js',
-    '/offline.html', // Add the missing comma here
-    // Additional assets can be listed here
 ];
 
-// Utility: Log with consistent prefix
+// Utility Logger
 const log = (...args) => console.log('[ServiceWorker]', ...args);
 
-// Install Event: Pre-cache static assets
+// Install Event: Cache static assets
 self.addEventListener('install', event => {
     log('Installing service worker and caching static assets...');
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
             log('Caching application shell...');
-            return cache.addAll(ASSETS_TO_CACHE).catch(err => {
-                log('Cache addAll failed:', err);
-            });
+            return cache.addAll(ASSETS_TO_CACHE);
         })
     );
     self.skipWaiting();
 });
 
-// Activate Event: Remove outdated caches
+// Activate Event: Clean old caches
 self.addEventListener('activate', event => {
     log('Activating service worker...');
     event.waitUntil(
@@ -56,34 +51,40 @@ self.addEventListener('activate', event => {
     self.clients.claim();
 });
 
-// Fetch Event: Serve from cache first, then network
+// Fetch Event: Advanced cache strategy
 self.addEventListener('fetch', event => {
     if (event.request.method !== 'GET') return;
 
-    event.respondWith(
-        caches.match(event.request).then(cachedResponse => {
-            if (cachedResponse) {
-                return cachedResponse; // Serve from cache if available
-            }
-
-            return fetch(event.request).then(networkResponse => {
-                // Only cache valid responses (status 200, basic type)
-                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, networkResponse.clone());
+    if (event.request.mode === 'navigate') {
+        // Handle navigation requests (page loads)
+        event.respondWith(
+            fetch(event.request).catch(() => caches.match('/offline.html'))
+        );
+    } else {
+        // Handle static assets (CSS, JS, Images etc.)
+        event.respondWith(
+            caches.match(event.request).then(cachedResponse => {
+                const fetchPromise = fetch(event.request)
+                    .then(networkResponse => {
+                        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+                            caches.open(CACHE_NAME).then(cache => {
+                                cache.put(event.request, networkResponse.clone());
+                            });
+                        }
+                        return networkResponse;
+                    }).catch(error => {
+                        log('Fetch failed:', error);
+                        return cachedResponse || caches.match('/offline.html');
                     });
-                }
-                return networkResponse;
-            }).catch(error => {
-                log('Fetch failed; returning offline fallback if available.', error);
-                // Return fallback page or asset if fetch fails
-                return caches.match('/offline.html');
-            });
-        })
-    );
+
+                // Serve cached response immediately while updating in background
+                return cachedResponse || fetchPromise;
+            })
+        );
+    }
 });
 
-// Listen for skipWaiting message from offline.html retry button
+// Listen for skipWaiting
 self.addEventListener('message', event => {
     if (event.data && event.data.action === 'skipWaiting') {
         self.skipWaiting();
