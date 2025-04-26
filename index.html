@@ -39,42 +39,53 @@
     <link rel="preconnect" href="https://api.mapbox.com" crossorigin />
     <link rel="preconnect" href="https://sarwan.netlify.app" crossorigin />
 
-    <!-- Preload Critical Resources -->
+    <!-- Preload Key Assets for better performance -->
     <link rel="preload" href="assets/css/style.css" as="style" />
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+        as="style" />
     <link rel="preload" href="assets/js/script.js" as="script" />
-
-    <!-- OwlCarousel CSS (Fixed Integrity Issue) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
-        integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
-        crossorigin="anonymous" />
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+        integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+        integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- Favicons -->
+    <!-- Favicon -->
     <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
+
+    <!-- Standard Favicons -->
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/android-chrome-192x192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/android-chrome-512x512.png" />
 
+    <!-- PWA App Icons (from site.webmanifest) -->
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/web-app-manifest-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon/web-app-manifest-512x512.png" />
+
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
 
-    <!-- PWA Manifest -->
+    <!-- Manifest for PWA -->
     <link rel="manifest" href="assets/favicon/site.webmanifest" />
 
-    <!-- Safari Pinned Tab -->
+    <!-- Safari pinned tab -->
     <link rel="mask-icon" href="assets/favicon/favicon.svg" color="#0011ff" />
 
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#ffffff" />
+    <!-- Microsoft Tiles -->
     <meta name="msapplication-TileColor" content="#0011ff" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="apple-mobile-web-app-title" content="Sarwan Yadav" />
     <meta name="application-name" content="Sarwan Yadav" />
     <meta name="msapplication-tooltip" content="Sarwan Yadav – Full Stack Developer Portfolio" />
-    <meta name="msapplication-starturl" content="https://sarwan.netlify.app/" />
+    <meta name="msapplication-starturl" content="https://sarwan6174.github.io/sarwan6174/" />
+
 </head>
 
 <body>
@@ -271,7 +282,7 @@
                             <i class="fas fa-envelope"></i>
                             <div class="info">
                                 <div class="head">Email</div>
-                                <div class="sub-title">sarwanyadav6174@gmail.com</div>
+                                <div class="sub-title">rangersarwan@gmail.com</div>
                             </div>
                         </div>
                     </div>
@@ -321,23 +332,28 @@
         </span>
     </footer>
 
+    <!-- Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        }
+
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/3.0.0/noframework.waypoints.min.js"
         integrity="sha512-lzIDzaYCox5oeC0ymj6ho5fRdMrCYkhHfVEm3fySZStdwG85y9SxTcIFYYEUiW1KYbkfiInVFkGofRlYlkHgLw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <!-- OwlCarousel JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"
         integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- FontAwesome -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
-        integrity="sha512-fD9DI5bZwQxOi7MhYWnnNPlvXdp/2Pj3XSTRrFs5FQa4mizyGLnJcN6tuvUS6LbmgN1ut+XGSABKvjN0H6Aoow=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-
     <script src="assets/js/script.js"></script>
 </body>
 

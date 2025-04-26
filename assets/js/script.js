@@ -1,83 +1,145 @@
-// ===== Check jQuery availability and version compatibility =====
-(function checkjQuery() {
-    if (typeof jQuery === 'undefined') {
-        console.error('jQuery is not loaded. Please include jQuery.');
-        return;
-    }
+// Check jQuery availability and compatibility
+if (typeof jQuery === 'undefined') {
+    console.log("jQuery is not loaded");
+} else if (/^1\.[0-6]\.\d+/.test(jQuery.fn.jquery)) {
+    console.log("jQuery version is not compatible with Owl Carousel");
+} else {
+    console.log("jQuery version is compatible with Owl Carousel");
+}
 
-    const version = jQuery.fn.jquery;
-    if (/^1\.[0-6]\.\d+/.test(version)) {
-        console.error(`Incompatible jQuery version (${version}). Please use jQuery 1.7+ for Owl Carousel.`);
-        return;
-    }
+$(document).ready(function () {
+    // Typing animation options
+    const typingOptions = {
+        strings: [
+            "student",
+            "software developer",
+            "web designer",
+            "tech enthusiast",
+            "problem solver",
+            "frontend engineer",
+            "UI/UX lover",
+            "JavaScript ninja",
+            "lifelong learner",
+            "code artist"
+        ],
+        typeSpeed: 100,
+        backSpeed: 60,
+        loop: true
+    };
 
-    console.log(`jQuery ${version} detected. Compatibility OK.`);
+    // Cache frequently used jQuery selectors
+    const $navbar = $('.navbar');
+    const $scrollUpBtn = $('.scroll-up-btn');
+    const $menuItems = $('.navbar .menu li a');
+    const $menuBtn = $('.menu-btn');
+    const $menu = $navbar.find('.menu');
 
-    $(function () { // DOM Ready
-
-        // ===== Typing animation options =====
-        const typingOptions = {
-            strings: [
-                "student", "software developer", "web designer",
-                "tech enthusiast", "problem solver", "frontend engineer",
-                "UI/UX lover", "JavaScript ninja", "lifelong learner", "code artist"
-            ],
-            typeSpeed: 100,
-            backSpeed: 60,
-            loop: true
-        };
-
-        // ===== Cached Selectors =====
-        const $window = $(window);
-        const $html = $('html');
-        const $navbar = $('.navbar');
-        const $scrollUpBtn = $('.scroll-up-btn');
-        const $menu = $('.navbar .menu');
-        const $menuBtn = $('.menu-btn');
-        const $menuLinks = $('.navbar .menu li a');
-
-        // ===== Scroll Behavior =====
-        $window.on('scroll', () => {
-            const scrollY = $window.scrollTop();
-            $navbar.toggleClass('sticky', scrollY > 20);
-            $scrollUpBtn.toggleClass('show', scrollY > 500);
-        });
-
-        // ===== Scroll-up Button =====
-        $scrollUpBtn.on('click', () => {
-            $html.animate({ scrollTop: 0 }, 'fast').css('scrollBehavior', 'auto');
-        });
-
-        // ===== Smooth Scroll for Menu Links =====
-        $menuLinks.on('click', () => {
-            $html.css('scrollBehavior', 'smooth');
-        });
-
-        // ===== Toggle Mobile Menu =====
-        $menuBtn.on('click', function () {
-            $menu.toggleClass('active');
-            $(this).find('i').toggleClass('active');
-        });
-
-        // ===== Initialize Typed Animations =====
-        new Typed('.typing', typingOptions);
-        new Typed('.typing-2', typingOptions);
-
-        // ===== Owl Carousel Initialization =====
-        $('.carousel').owlCarousel({
-            margin: 20,
-            loop: true,
-            autoplay: true,
-            autoplayTimeout: 2000,
-            autoplayHoverPause: true,
-            responsive: {
-                0: { items: 1, nav: false },
-                600: { items: 2, nav: false },
-                1000: { items: 3, nav: false }
-            }
-        });
+    // Scroll event for navbar and scroll-up button
+    $(window).scroll(function () {
+        const scrollY = $(this).scrollTop();
+        $navbar.toggleClass("sticky", scrollY > 20);
+        $scrollUpBtn.toggleClass("show", scrollY > 500);
     });
-})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Scroll-up button click
+    $scrollUpBtn.click(function () {
+        $('html').animate({ scrollTop: 0 }, 'fast').css("scrollBehavior", "auto");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Smooth scroll on menu item click
+    $menuItems.click(function () {
+        $('html').css("scrollBehavior", "smooth");
+
+
+
+
+
+
+
+
+
+
+    });
+
+    // Toggle mobile menu
+    $menuBtn.click(function () {
+        $menu.toggleClass("active");
+        $(this).find('i').toggleClass("active");
+
+    });
+
+
+
+
+
+
+
+    // Initialize typing animations
+    new Typed(".typing", typingOptions);
+    new Typed(".typing-2", typingOptions);
+
+    // Owl Carousel initialization
+    $('.carousel').owlCarousel({
+        margin: 20,
+        loop: true,
+        autoplayTimeout: 2000,
+        autoplayHoverPause: true,
+        responsive: {
+            0: { items: 1, nav: false },
+            600: { items: 2, nav: false },
+            1000: { items: 3, nav: false }
+        }
+
+
+
+
+    });
+});
 
 // ===== Register Service Worker for PWA Features =====
 (function registerServiceWorker() {
